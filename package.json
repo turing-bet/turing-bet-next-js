@@ -10,13 +10,16 @@
     "format": "prettier --log-level warn --write ."
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.0",
     "@upstash/redis": "^1.34.0",
     "dotenv": "^16.4.5",
     "ethers": "^6.13.2",
     "next": "14.2.6",
     "prettier": "^3.3.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "twitter-api-v2": "^1.17.2",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
