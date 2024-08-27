@@ -1,5 +1,5 @@
 export type GlobalState = {
-  rounds: [];
+  rounds: Round[];
   selectedAccounts: string[];
   voters: string[];
   //TODO: add roundId
