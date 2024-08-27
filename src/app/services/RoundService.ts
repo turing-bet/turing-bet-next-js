@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-
+import redis from "../lib/db";
 class RoundService {
   async setupRound(
     selectedAccount: string,
@@ -19,6 +19,12 @@ class RoundService {
       status: RoundStatus.ACTIVE,
     };
     return round;
+  }
+
+  async getRemainingRoundTime(roundId: string): Promise<number> {
+    const now: number = Date.now();
+    const end: number = (await redis.get(`round:${roundId}:roundEndTime`)) || 0;
+    return end - now;
   }
 }
 
