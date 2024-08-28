@@ -1,5 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import redis from "../lib/db";
+import { Round, RoundStatus } from "../model/round";
+import { Bet, BetStatus } from "../model/bet";
+import PostService from "./PostService";
 class RoundService {
   async setupRound(
     selectedAccount: string,
@@ -7,12 +10,20 @@ class RoundService {
     voterAddress: string,
   ): Promise<Round> {
     const roundId = uuidv4();
+    const post = await PostService.setupRandomPost();
+    const bet: Bet = {
+      address: voterAddress,
+      amount: betAmount,
+      roundId: roundId,
+      betStatus: BetStatus.PENDING,
+    };
     const round: Round = {
       id: roundId,
       selectedAccountHandle: selectedAccount,
       voterAddresses: [voterAddress],
       totalBettingPool: betAmount,
-      voterBets: { voterAddress: betAmount },
+      voterBets: { voterAddress: bet },
+
       roundStartTime: Date.now(),
       //TODO: make sure this is 24 hours from start
       roundEndTime: Date.now() + 1000 * 60 * 60 * 24,

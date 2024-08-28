@@ -4,8 +4,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import redis from "../../lib/db";
 import { Round } from "../../model/round";
-export default function RoundPage() {
-  //  {roundLobby}: {roundLobby: Round}
+export default function CreateRoundPage({ roundLobby }: { roundLobby: Round }) {
   const [roundId, setRoundId] = useState<string | null>(null);
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
   const [betAmount, setBetAmount] = useState<number | null>(null);

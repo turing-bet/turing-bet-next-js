@@ -1,5 +1,5 @@
-type Post = {
-  roundId: string;
-  text: string;
-  isGenerated: boolean;
-};
+export interface Post {
+  roundId?: string;
+  text?: string;
+  isGenerated?: boolean;
+}
