@@ -1,13 +1,33 @@
 "use client";
 import TextField from "@mui/material/TextField";
 import type { FormEvent } from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { useRouter } from "next/navigation";
 import redis from "../../lib/db";
 import { Round } from "../../model/round";
-export default function CreateRoundPage({ roundLobby }: { roundLobby: Round }) {
-  const [roundId, setRoundId] = useState<string | null>(null);
+export default function CreateRoundPage() {
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
   const [betAmount, setBetAmount] = useState<number | null>(null);
+  async function amountSelect(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const target = e.target as HTMLFormElement;
+    const input = target.elements.namedItem("amountInput") as HTMLInputElement;
+    if (!input.value || input.value.length == 0) return;
+    setBetAmount(parseInt(input.value));
+    console.log("Bet amount: ", input.value);
+  }
+  function accountSelect(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const target = e.target as HTMLFormElement;
+    const input = target.elements.namedItem("accountInput") as HTMLInputElement;
+    if (!input.value || input.value.length == 0) return;
+    setSelectedAccount(input.value);
+    console.log("Selected account: ", input.value);
+  }
+  async function submitCreateRound(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+  }
+
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="relative h-min">
@@ -52,22 +72,4 @@ export default function CreateRoundPage({ roundLobby }: { roundLobby: Round }) {
       </div>
     </div>
   );
-}
-
-function createRound(e: FormEvent<HTMLFormElement>) {}
-
-async function amountSelect(e: FormEvent<HTMLFormElement>) {
-  e.preventDefault();
-  const target = e.target as HTMLFormElement;
-  const input = target.elements.namedItem("amountInput") as HTMLInputElement;
-  if (!input.value || input.value.length == 0) return;
-  // await redis.hset(`round:${roundId}`, {betAmount: input.value});
-}
-
-function accountSelect(e: FormEvent<HTMLFormElement>) {
-  e.preventDefault();
-  const target = e.target as HTMLFormElement;
-  const input = target.elements.namedItem("accountInput") as HTMLInputElement;
-  if (!input.value || input.value.length == 0) return;
-  // setSelectedAccount(input.value);
 }
