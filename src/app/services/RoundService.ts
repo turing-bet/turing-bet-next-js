@@ -5,7 +5,7 @@ import { Bet, BetStatus } from "../model/bet";
 import PostService from "./PostService";
 class RoundService {
   async setupRound(
-    selectedAccount: string,
+    // selectedAccount: string,
     betAmount: number,
     voterAddress: string,
   ): Promise<Round> {
@@ -19,13 +19,13 @@ class RoundService {
     };
     const round: Round = {
       id: roundId,
-      selectedAccountHandle: selectedAccount,
+      // selectedAccountHandle: selectedAccount,
       voterAddresses: [voterAddress],
       totalBettingPool: betAmount,
       voterBets: { voterAddress: bet },
 
       roundStartTime: Date.now(),
-      //TODO: make sure this is 24 hours from start
+      //TODO: make sure this is X time from now
       roundEndTime: Date.now() + 1000 * 60 * 60 * 24,
       status: RoundStatus.ACTIVE,
     };
