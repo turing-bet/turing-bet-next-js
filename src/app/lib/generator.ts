@@ -9,7 +9,7 @@ export async function gatherAnswers(answers: string[]): Promise<string[]> {
   return data;
 }
 
-export async function generateCast(data: string[], question: string) {
+export async function generateAnswer(data: string[], question: string) {
   const msg = await anthropic.messages.create({
     model: "claude-3-opus-20240229",
     max_tokens: 1000,

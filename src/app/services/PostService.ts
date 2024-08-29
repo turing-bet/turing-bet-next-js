@@ -1,9 +1,9 @@
 import { Post } from "../model/post";
-
+import { gatherAnswers, generateAnswer } from "../lib/generator";
 class PostService {
   async getContextPosts(): Promise<Post[]> {
     const contextPosts: Post[] = [];
-    let userAnswers: string[] = [];
+    const userAnswers: string[] = [];
 
     return contextPosts;
   }
@@ -14,6 +14,7 @@ class PostService {
       text: "",
       isGenerated: false,
     };
+
     return randomPost;
   }
 

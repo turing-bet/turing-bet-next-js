@@ -2,6 +2,9 @@ import { Round } from "./round";
 import { Bet } from "./bet";
 export interface Lobby extends Round {
   inner: Round;
+  voterAddresses?: string[];
+  totalBettingPool?: number;
+  isPrivate?: boolean;
   pendingBets: { [address: string]: Bet };
 }
 

@@ -1,15 +1,20 @@
 "use client";
 import TextField from "@mui/material/TextField";
+import Checkbox from "@mui/material/Checkbox";
+
 import LoadingButton from "@mui/lab/LoadingButton";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import type { FormEvent } from "react";
+
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
+import FormControl from "@mui/material/FormControl";
 import redis from "../../lib/db";
 import { Round } from "../../model/round";
 import RoundService from "../../services/RoundService";
 export default function CreateRoundPage() {
-  const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
   const [betAmount, setBetAmount] = useState<number | null>(null);
   const [buttonLoading, setButtonLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -24,14 +29,17 @@ export default function CreateRoundPage() {
   }
   async function submitCreateRound(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!betAmount) return;
     setButtonLoading(true);
     const target = e.target as HTMLFormElement;
-    // const betInput = target.elements.namedItem("amountInput") as HTMLInputElement;
+    //TODO: un-dummy this once target.elements works
+    // const betInput  = (target.elements.namedItem("amountInput") as HTMLInputElement).value;
+    const betInput = parseInt("0.01");
+    console.log("Bet amount: ", betInput);
     const round = await RoundService.setupRound(
-      betAmount,
+      betInput,
       "0x0123456789" as `0x${string}`,
     );
+    console.log("Round created: ", round);
     if (round) {
       router.push(`/lobby/${round.id}`);
       console.log("lobby created at: /lobby/" + round.id);
@@ -42,7 +50,10 @@ export default function CreateRoundPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen input-group">
-      <form className="form-control" onSubmit={submitCreateRound}>
+      <Typography component="h2" variant="h7">
+        Create a new round
+      </Typography>
+      <FormControl component="fieldset" fullWidth>
         <label className="label" htmlFor="amountInput">
           <TextField
             id="amountInput"
@@ -52,16 +63,23 @@ export default function CreateRoundPage() {
             focused
           />
         </label>
-        <Button className="btn btn-primary" type="submit">
+
+        <Button type="submit" fullWidth variant="contained">
           Submit
         </Button>
-      </form>
-
-      <div className="flex flex-col items-center justify-center rounded-lg p-4">
-        <LoadingButton variant="outlined" type="submit">
-          New round
-        </LoadingButton>
-      </div>
+        <div>
+          <Typography component="h2" variant="h7">
+            Privacy settings
+          </Typography>
+          <FormControlLabel required control={<Checkbox />} label="Unlisted" />
+          <FormControlLabel required control={<Checkbox />} label="Public" />
+        </div>
+        <div>
+          <Button type="submit" variant="outlined" onClick={submitCreateRound}>
+            New round
+          </Button>
+        </div>
+      </FormControl>
     </div>
   );
 }

@@ -8,11 +8,8 @@ export enum RoundStatus {
 
 export interface Round {
   id?: string;
-  voterAddresses?: string[];
-  totalBettingPool?: number;
   voterBets?: { [address: string]: Bet };
   roundStartTime?: number;
   roundEndTime?: number;
   status?: RoundStatus;
-  isPrivate?: boolean;
 }
