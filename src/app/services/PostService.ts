@@ -1,10 +1,17 @@
 import { Post } from "../model/post";
 
 class PostService {
+  async getContextPosts(): Promise<Post[]> {
+    const contextPosts: Post[] = [];
+    let userAnswers: string[] = [];
+
+    return contextPosts;
+  }
+
   async setupRandomPost(): Promise<Post> {
     const randomPost: Post = {
       roundId: "",
-      text: "This is a random post",
+      text: "",
       isGenerated: false,
     };
     return randomPost;
