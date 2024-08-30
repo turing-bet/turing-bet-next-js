@@ -14,9 +14,10 @@ import FormControl from "@mui/material/FormControl";
 import redis from "../../lib/db";
 import { Round } from "../../model/round";
 import RoundService from "../../services/RoundService";
-export default function CreateRoundPage() {
+export default function CreateLobbyPage() {
   const [betAmount, setBetAmount] = useState<number | null>(null);
   const [buttonLoading, setButtonLoading] = useState<boolean>(false);
+  const newRoundButton = document.querySelector(".newRound");
   const router = useRouter();
 
   async function amountSelect(e: FormEvent<HTMLFormElement>) {
@@ -27,10 +28,8 @@ export default function CreateRoundPage() {
     setBetAmount(parseInt(input.value));
     console.log("Bet amount: ", input.value);
   }
-  async function submitCreateRound(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function submitCreateRound() {
     setButtonLoading(true);
-    const target = e.target as HTMLFormElement;
     //TODO: un-dummy this once target.elements works
     // const betInput  = (target.elements.namedItem("amountInput") as HTMLInputElement).value;
     const betInput = parseInt("0.01");
@@ -39,7 +38,7 @@ export default function CreateRoundPage() {
       betInput,
       "0x0123456789" as `0x${string}`,
     );
-    console.log("Round created: ", round);
+    console.log("lobby created: ", round);
     if (round) {
       router.push(`/lobby/${round.id}`);
       console.log("lobby created at: /lobby/" + round.id);
@@ -50,8 +49,8 @@ export default function CreateRoundPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen input-group">
-      <Typography component="h2" variant="h7">
-        Create a new round
+      <Typography component="h2" variant="h3">
+        Create a new lobby
       </Typography>
       <FormControl component="fieldset" fullWidth>
         <label className="label" htmlFor="amountInput">
@@ -68,14 +67,18 @@ export default function CreateRoundPage() {
           Submit
         </Button>
         <div>
-          <Typography component="h2" variant="h7">
+          <Typography component="h2" variant="h3">
             Privacy settings
           </Typography>
           <FormControlLabel required control={<Checkbox />} label="Unlisted" />
           <FormControlLabel required control={<Checkbox />} label="Public" />
         </div>
         <div>
-          <Button type="submit" variant="outlined" onClick={submitCreateRound}>
+          <Button
+            className="newRound"
+            variant="contained"
+            onClick={submitCreateRound}
+          >
             New round
           </Button>
         </div>
