@@ -1,5 +1,5 @@
 "use client";
-import web3auth from "../../lib/web3auth";
+import { web3auth } from "../../lib/web3auth";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWeb3Auth } from "@web3auth/modal-react-hooks";
@@ -22,12 +22,15 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
+import { getWalletProvider, IWalletProvider } from "../../lib/walletProvider";
+import RPC from "../../lib/ethersRPC";
+
 import { ethers } from "ethers";
 import {
   Web3AuthInnerContext,
   Web3AuthProvider,
 } from "@web3auth/modal-react-hooks";
-import web3AuthContextConfig from "../../lib/web3auth";
+import { web3AuthContextConfig } from "../../lib/web3auth";
 import { WalletServicesProvider } from "@web3auth/wallet-services-plugin-react-hooks";
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -63,55 +66,81 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 export default function LoginPage() {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const validateInputs = () => {};
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const [provider, setProvider] = useState<IProvider | null>(null);
+  const [walletProvider, setWalletProvider] = useState<IWalletProvider | null>(
+    null,
+  );
   const [loggedIn, setLoggedIn] = useState(false);
   async function onCreateLobbyClickHandler() {
-    router.push("/createLobby");
+    router.push("../createLobby/CreateLobby");
   }
   async function onBrowseLobbiesClickHandler() {
-    router.push("globalLobbies");
+    router.push("../globalLobbies/globalLobbies");
   }
-  // useEffect(() => {
-  //   const init = async () => {
-  //     try {
-  //       await web3auth.init();
-  //       setProvider(web3auth.provider);
-  //       if (web3auth.status === ADAPTER_EVENTS.CONNECTED) {
-  //         setLoggedIn(true);
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await web3auth.initModal();
+        setProvider(web3auth.provider);
 
-  //   init();
-  // }, []);
+        if (web3auth.connected) {
+          setLoggedIn(true);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    init();
+  }, []);
   const login = async () => {
-    //   const web3authProvider = await web3auth.connect();
-    //   setProvider(web3auth.provider);
-    //   if (web3auth.connected) {
-    //     setLoggedIn(true);
-    //   }
+    const web3authProvider = await web3auth.connect();
+    setProvider(web3authProvider);
+    if (web3auth.connected) {
+      setLoggedIn(true);
+    }
   };
-  // const getUserInfo = async () => {
-  //   const userInfo = await web3auth.getUserInfo();
-  //   uiConsole(userInfo);
-  // }
-  // const logout = async () => {
-  //   await web3auth.logout();
-  //   setProvider(null);
-  //   setLoggedIn(false);
-  //   uiConsole("logged out");
-  // };
+  const getUserInfo = async () => {
+    const userInfo = await web3auth.getUserInfo();
+    uiConsole(userInfo);
+  };
+  const logout = async () => {
+    await web3auth.logout();
+    setProvider(null);
+    setLoggedIn(false);
+    uiConsole("logged out");
+  };
+  const getAccounts = async () => {
+    if (!provider) {
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    const address = await RPC.getAccounts(provider);
+    uiConsole(address);
+    printUrl(address, "address");
+  };
+  const printUrl = (
+    hash: string,
+    type: "transaction" | "address" = "address",
+  ) => {
+    const explorerLink = `https://sepolia.etherscan.io/${type === "transaction" ? "tx" : "address"}/${hash}`;
+    const anchor = `<a href="${explorerLink}" target="_blank" rel="noopener noreferrer">${hash}</a>`;
+
+    const consoleElement = document.querySelector("#console>p");
+    if (consoleElement) {
+      consoleElement.innerHTML = anchor;
+    }
+  };
+
+  const signMessage = async () => {
+    if (!provider) {
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    const signedMessage = await RPC.signMessage(provider);
+    uiConsole(signedMessage);
+  };
   function uiConsole(...args: any[]): void {
     const el = document.getElementById("#console>p");
     if (el) {
@@ -141,7 +170,12 @@ export default function LoginPage() {
               }}
             >
               <FormControl>
-                <Button variant="outlined" onClick={login}>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    uiConsole(getUserInfo);
+                  }}
+                >
                   Web3 sign in
                 </Button>
               </FormControl>

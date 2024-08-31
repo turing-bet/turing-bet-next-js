@@ -43,11 +43,10 @@ const walletServicesPlugin = new WalletServicesPlugin({
   },
 });
 
-const web3AuthContextConfig = {
+export const web3AuthContextConfig = {
   web3AuthOptions,
   adapters: [openloginAdapter],
   plugins: [walletServicesPlugin],
 };
-const web3auth = new Web3Auth(web3AuthOptions);
-export default web3AuthContextConfig;
+export const web3auth = new Web3Auth(web3AuthOptions);
 // export default web3auth;
