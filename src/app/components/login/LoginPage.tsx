@@ -17,12 +17,8 @@ import {
 } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import FormLabel from "@mui/material/FormLabel";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
@@ -65,10 +61,6 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   }),
 }));
 export default function LoginPage() {
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const validateInputs = () => {};
@@ -82,12 +74,6 @@ export default function LoginPage() {
 
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
-  // async function onSignClickHandler() {
-  //   const ethersProvider = new ethers.BrowserProvider(window.ethereum);
-  //   const accounts = await ethersProvider.send("eth_requestAccounts", []);
-  //   const account = accounts[0];
-  //   console.log(`Account: ${account}`);
-  // }
   async function onCreateLobbyClickHandler() {
     router.push("/createLobby");
   }
