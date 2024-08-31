@@ -1,7 +1,7 @@
 import Image from "next/image";
 import RoundPage from "./components/round/RoundPage";
 import LoginPage from "./components/login/LoginPage";
-import CreateRoundPage from "./components/create_round/CreateRound";
+import CreateLobbyPage from "./components/createLobby/CreateLobby";
 import { Round } from "./model/round";
 export default function Home() {
   return (

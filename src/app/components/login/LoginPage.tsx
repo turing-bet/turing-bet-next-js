@@ -1,14 +1,14 @@
 "use client";
 import web3auth from "../../lib/web3auth";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { useWeb3Auth } from "@web3auth/modal-react-hooks";
 import {
   ADAPTER_EVENTS,
   CHAIN_NAMESPACES,
   IProvider,
   WEB3AUTH_NETWORK,
 } from "@web3auth/base";
-
 import {
   ThemeProvider,
   createTheme,
@@ -27,6 +27,12 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { ethers } from "ethers";
+import {
+  Web3AuthInnerContext,
+  Web3AuthProvider,
+} from "@web3auth/modal-react-hooks";
+import web3AuthContextConfig from "../../lib/web3auth";
+import { WalletServicesProvider } from "@web3auth/wallet-services-plugin-react-hooks";
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -76,12 +82,12 @@ export default function LoginPage() {
 
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
-  async function onSignClickHandler() {
-    const ethersProvider = new ethers.BrowserProvider(window.ethereum);
-    const accounts = await ethersProvider.send("eth_requestAccounts", []);
-    const account = accounts[0];
-    console.log(`Account: ${account}`);
-  }
+  // async function onSignClickHandler() {
+  //   const ethersProvider = new ethers.BrowserProvider(window.ethereum);
+  //   const accounts = await ethersProvider.send("eth_requestAccounts", []);
+  //   const account = accounts[0];
+  //   console.log(`Account: ${account}`);
+  // }
   async function onCreateLobbyClickHandler() {
     router.push("/createLobby");
   }
@@ -103,13 +109,23 @@ export default function LoginPage() {
 
   //   init();
   // }, []);
-  // const login = async () => {
-  //   const web3authProvider = await web3auth.connect();
-  //   setProvider(web3auth.provider);
-  //   if (web3auth.connected) {
-  //     setLoggedIn(true);
-  //   }
+  const login = async () => {
+    //   const web3authProvider = await web3auth.connect();
+    //   setProvider(web3auth.provider);
+    //   if (web3auth.connected) {
+    //     setLoggedIn(true);
+    //   }
+  };
+  // const getUserInfo = async () => {
+  //   const userInfo = await web3auth.getUserInfo();
+  //   uiConsole(userInfo);
   // }
+  // const logout = async () => {
+  //   await web3auth.logout();
+  //   setProvider(null);
+  //   setLoggedIn(false);
+  //   uiConsole("logged out");
+  // };
   function uiConsole(...args: any[]): void {
     const el = document.getElementById("#console>p");
     if (el) {
@@ -119,36 +135,40 @@ export default function LoginPage() {
   }
 
   return (
-    <SignInContainer direction="column" justifyContent="space-between">
-      <Card variant="outlined">
-        <Typography
-          component="h1"
-          variant="h4"
-          sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
-        >
-          Sign in
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            gap: 2,
-          }}
-        >
-          <FormControl>
-            <Button variant="outlined" onClick={onSignClickHandler}>
-              Web3 sign in
+    <Web3AuthProvider config={web3AuthContextConfig}>
+      <WalletServicesProvider context={Web3AuthInnerContext}>
+        <SignInContainer direction="column" justifyContent="space-between">
+          <Card variant="outlined">
+            <Typography
+              component="h1"
+              variant="h4"
+              sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+            >
+              Sign in
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                gap: 2,
+              }}
+            >
+              <FormControl>
+                <Button variant="outlined" onClick={login}>
+                  Web3 sign in
+                </Button>
+              </FormControl>
+            </Box>
+            <Button variant="outlined" onClick={onCreateLobbyClickHandler}>
+              Create lobby
             </Button>
-          </FormControl>
-        </Box>
-        <Button variant="outlined" onClick={onCreateLobbyClickHandler}>
-          Create lobby
-        </Button>
-        <Button variant="outlined" onClick={onBrowseLobbiesClickHandler}>
-          Browse lobbies
-        </Button>
-      </Card>
-    </SignInContainer>
+            <Button variant="outlined" onClick={onBrowseLobbiesClickHandler}>
+              Browse lobbies
+            </Button>
+          </Card>
+        </SignInContainer>
+      </WalletServicesProvider>
+    </Web3AuthProvider>
   );
 }

@@ -19,13 +19,13 @@ export default function RoundPage(lobby: Lobby) {
 
   return (
     <div className="flex flex-col  h-screen">
-      <Typography component="h2" variant="h7">
+      <Typography component="h2" variant="h5">
         Round ID: {lobby.id} 01234567-abcd
       </Typography>
-      <Typography component="h2" variant="h7">
+      <Typography component="h2" variant="h5">
         Players: {lobby.voterAddresses} mishka.eth, hemlock.eth
       </Typography>
-      <Typography component="h2" variant="h7">
+      <Typography component="h2" variant="h5">
         Betting pool: {lobby.totalBettingPool} 0.01 ETH
       </Typography>
 
@@ -62,13 +62,13 @@ export function VotingRoundPage(lobby: Lobby) {
 
   return (
     <div className="flex flex-col  h-screen">
-      <Typography component="h2" variant="h7">
+      <Typography component="h2" variant="h5">
         Round ID: {lobby.id} 01234567-abcd
       </Typography>
-      <Typography component="h2" variant="h7">
+      <Typography component="h2" variant="h5">
         Players: {lobby.voterAddresses} mishka.eth, hemlock.eth
       </Typography>
-      <Typography component="h2" variant="h7">
+      <Typography component="h2" variant="h5">
         Betting pool: {lobby.totalBettingPool} 0.01 ETH
       </Typography>
 
@@ -124,7 +124,7 @@ export function VotingRoundPage(lobby: Lobby) {
           </Typography>
         </Box>
       </Container>
-      <Typography component="h2" variant="h7">
+      <Typography component="h2" variant="h5">
         Who is the bot?
       </Typography>
       <Container>
