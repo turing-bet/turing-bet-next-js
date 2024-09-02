@@ -1,21 +1,24 @@
 "use client";
 import { Button } from "@mui/material";
+import { useRouter } from "next/navigation";
 import Typography from "@mui/material/Typography";
-
-export default function LobbyPage() {
+import { Lobby } from "../../model/lobby";
+import { useState } from "react";
+export default function LobbyPage(lobby: Lobby) {
+  const router = useRouter();
   return (
     <div className="flex flex-col h-screen ">
       <Typography component="h2" variant="h5">
-        Lobby ID:
+        Lobby ID: {lobby.id}
       </Typography>
       <div>
         <Typography component="h2" variant="h5">
-          Current players in lobby:
+          Current players in lobby: {lobby.voterAddresses}
         </Typography>
       </div>
       <div>
         <Typography component="h2" variant="h5">
-          Total bet pool: 0.01 ETH
+          Current bet pool: {lobby.totalBettingPool}
         </Typography>
 
         <Button variant="contained" color="primary">

@@ -6,7 +6,8 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: {
     chainConfig: {

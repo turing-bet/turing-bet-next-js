@@ -4,7 +4,6 @@ export interface Lobby extends Round {
   inner: Round;
   voterAddresses?: string[];
   totalBettingPool?: number;
-  isPrivate?: boolean;
   pendingBets: { [address: string]: Bet };
 }
 
@@ -14,7 +13,7 @@ export type LobbyAction =
       payload: Partial<Lobby>;
     }
   | {
-      type: "setBetAmount";
+      type: "setBets";
       payload: Lobby["pendingBets"];
     }
   | {
@@ -26,7 +25,7 @@ export function lobbyReducer(lobby: Lobby, action: LobbyAction): Lobby {
   switch (action.type) {
     case "updateLobby":
       return { ...lobby, ...action.payload };
-    case "setBetAmount":
+    case "setBets":
       return { ...lobby, ...action.payload };
     case "setRound":
       return { ...lobby, ...action.payload };
