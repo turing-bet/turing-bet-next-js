@@ -1,6 +1,6 @@
 "use client";
 import { web3auth } from "../../lib/web3auth";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useWeb3Auth } from "@web3auth/modal-react-hooks";
 import {
@@ -68,58 +68,62 @@ export default function LoginPage() {
   const router = useRouter();
 
   const [provider, setProvider] = useState<IProvider | null>(null);
-  const [walletProvider, setWalletProvider] = useState<IWalletProvider | null>(
-    null,
-  );
   const [loggedIn, setLoggedIn] = useState(false);
-  async function onCreateLobbyClickHandler() {
-    router.push("../createLobby/CreateLobby");
-  }
-  async function onBrowseLobbiesClickHandler() {
-    router.push("../globalLobbies/globalLobbies");
-  }
-  useEffect(() => {
-    const init = async () => {
-      try {
-        await web3auth.initModal();
-        setProvider(web3auth.provider);
 
-        if (web3auth.connected) {
-          setLoggedIn(true);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    init();
-  }, []);
-  const login = async () => {
-    const web3authProvider = await web3auth.connect();
-    setProvider(web3authProvider);
-    if (web3auth.connected) {
-      setLoggedIn(true);
+  const initWeb3Auth = useCallback(async () => {
+    try {
+      await web3auth.initModal();
+      setProvider(web3auth.provider);
+      setLoggedIn(web3auth.connected);
+    } catch (error) {
+      console.error("failed to init web3 auth error: " + error);
     }
-  };
-  const getUserInfo = async () => {
-    const userInfo = await web3auth.getUserInfo();
-    uiConsole(userInfo);
-  };
+  }, []);
+  useEffect(() => {
+    initWeb3Auth();
+  }, [initWeb3Auth]);
+  const login = useCallback(async () => {
+    try {
+      const web3authProvider = await web3auth.connect();
+      setProvider(web3authProvider);
+      setLoggedIn(web3auth.connected);
+    } catch (error) {
+      console.error("failed to login web3auth error: " + error);
+    }
+  }, []);
+  const getUserInfo = useCallback(async () => {
+    if (!provider) {
+      console.error("provider not initialized yet");
+      return;
+    }
+    try {
+      const userInfo = await web3auth.getUserInfo();
+      console.log(userInfo);
+      uiConsole(userInfo);
+    } catch (error) {
+      console.error("failed to get user info error: " + error);
+    }
+  }, [provider]);
   const logout = async () => {
     await web3auth.logout();
     setProvider(null);
     setLoggedIn(false);
     uiConsole("logged out");
   };
-  const getAccounts = async () => {
+  const getAccounts = useCallback(async () => {
     if (!provider) {
+      console.log("provider not initalized yet");
       uiConsole("provider not initialized yet");
       return;
     }
-    const address = await RPC.getAccounts(provider);
-    uiConsole(address);
-    printUrl(address, "address");
-  };
+    try {
+      const address = await RPC.getAccounts(provider);
+      uiConsole(address);
+      printUrl(address, "address");
+    } catch (error) {
+      console.error("failed to get accounts error: " + error);
+    }
+  }, [provider]);
   const printUrl = (
     hash: string,
     type: "transaction" | "address" = "address",
@@ -149,6 +153,10 @@ export default function LoginPage() {
     console.log(...args);
   }
 
+  const onBrowseLobbiesClickHandler = () => {
+    router.push("/globalLobbies/GlobalLobbyPage");
+  };
+
   return (
     <Web3AuthProvider config={web3AuthContextConfig}>
       <WalletServicesProvider context={Web3AuthInnerContext}>
@@ -169,22 +177,22 @@ export default function LoginPage() {
                 gap: 2,
               }}
             >
-              <FormControl>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    uiConsole(getUserInfo);
-                  }}
-                >
-                  Web3 sign in
-                </Button>
-              </FormControl>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  uiConsole(getUserInfo);
+                }}
+                disabled={loggedIn}
+              >
+                Web3 sign in
+              </Button>
             </Box>
-            <Button variant="outlined" onClick={onCreateLobbyClickHandler}>
-              Create lobby
-            </Button>
+            <Button variant="outlined">Create lobby</Button>
             <Button variant="outlined" onClick={onBrowseLobbiesClickHandler}>
               Browse lobbies
+            </Button>
+            <Button variant="outlined" href="/testPage/page">
+              test
             </Button>
           </Card>
         </SignInContainer>

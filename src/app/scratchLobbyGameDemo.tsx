@@ -7,59 +7,55 @@
 // [] AI gen thingy
 // web3 stuff
 import Image from "next/image";
-import { useState, useEffect, startTransition } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
 import { Lobby, lobbyReducer } from "./model/lobby";
 import RoundService from "./services/RoundService";
 import LobbyService from "./services/LobbyService";
 import Typography from "@mui/material/Typography";
 import { Button } from "@mui/material";
-import Link from "next/link";
-export default function ScratchLobbyGameDemoPage(initLobby: Lobby) {
+
+export default function ScratchLobbyGameDemoPage() {
   //Routing TODO:
   //  /lobby -> /submission -> /voting -> /results -> /lobby
   const router = useRouter();
   const [addresses, setAddresses] = useState<string[]>([]);
-  //init LOBBY
-  // useEffect(() => {
-  //   const initLobby = async () => {
-  //     try {
-  //       console.log("init lobby: " + initLobby);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
+  const [dummyLobby, setLobby] = useState<Lobby | null>(null);
+  //DUMMY LOBBY
+  useEffect(() => {
+    const initLobby = async () => {
+      try {
+        const round = await RoundService.setupRound(0.01, "mishka.eth");
+        const dummyLobby: Lobby = await LobbyService.setupLobby(round, 0.04, [
+          "mishka.eth",
+          "hemlock.eth",
+        ]);
+        await LobbyService.storeLobby(dummyLobby);
+        console.log(dummyLobby);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  //   initLobby();
-  // }, []);
-  function onStartGameClickHandler() {
-    startTransition(() => {
-      router.push(`./submission/${initLobby?.inner.id}`);
-    });
-  }
+    initLobby();
+  }, []);
 
   return (
     <div className="flex flex-col h-screen ">
       <Typography component="h2" variant="h5">
-        Lobby ID:
-        <> {initLobby?.inner.id}</>
+        Lobby ID: {dummyLobby?.inner.id}
       </Typography>
       <div>
         <Typography component="h2" variant="h5">
-          Current players in lobby: {initLobby?.voterAddresses}
+          Current players in lobby: {dummyLobby?.voterAddresses}
         </Typography>
       </div>
       <div>
         <Typography component="h2" variant="h5">
-          Current bet pool: {initLobby?.totalBettingPool}
+          Current bet pool: {dummyLobby?.totalBettingPool}
         </Typography>
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={onStartGameClickHandler}
-        >
+        <Button variant="contained" color="primary">
           Start Game
         </Button>
       </div>
@@ -67,7 +63,7 @@ export default function ScratchLobbyGameDemoPage(initLobby: Lobby) {
   );
 
   // const [lobby, setLobby] = lobbyReducer(
-  //   initLobby,
+  //   dummyLobby,
   //   {type: "ADD_PLAYER", payload: "mishka.eth"}
   //     );
   // ) ;

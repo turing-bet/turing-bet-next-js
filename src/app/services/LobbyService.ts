@@ -22,6 +22,11 @@ class LobbyService {
     await redis.set(`round:${lobby.inner.id}`, JSON.stringify(lobby));
   }
 
+  async fetchLobby(id: string): Promise<Lobby> {
+    const res: Lobby | null = await redis.hgetall(`lobby:${id}`);
+    return res;
+  }
+
   async getRemainingRoundTime(roundId: string): Promise<number> {
     const now: number = Date.now();
     const end: number = (await redis.get(`round:${roundId}:roundEndTime`)) || 0;

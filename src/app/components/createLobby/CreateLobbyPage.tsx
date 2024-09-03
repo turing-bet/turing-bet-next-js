@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import FormControl from "@mui/material/FormControl";
 import redis from "../../lib/db";
 import { Round } from "../../model/round";
+import LobbyService from "../../services/LobbyService";
 import RoundService from "../../services/RoundService";
 export default function CreateLobbyPage() {
   const [betAmount, setBetAmount] = useState<number | null>(null);
@@ -28,20 +29,21 @@ export default function CreateLobbyPage() {
     setBetAmount(parseInt(input.value));
     console.log("Bet amount: ", input.value);
   }
-  async function submitCreateRound() {
+  async function submitCreateLobby() {
     setButtonLoading(true);
     //TODO: un-dummy this once target.elements works
     // const betInput  = (target.elements.namedItem("amountInput") as HTMLInputElement).value;
     const betInput = parseInt("0.01");
     console.log("Bet amount: ", betInput);
-    const round = await RoundService.setupRound(
-      betInput,
-      "0x0123456789" as `0x${string}`,
-    );
-    console.log("lobby created: ", round);
-    if (round) {
-      router.push(`/lobby/${round.id}`);
-      console.log("lobby created at: /lobby/" + round.id);
+    const round = await RoundService.setupRound(betInput, "mishka.eth");
+    const lobby = await LobbyService.setupLobby(round, 0.01, [
+      "mishka.eth",
+      "hemlock.eth",
+    ]);
+    console.log("lobby created: ", lobby);
+    if (lobby) {
+      router.push(`/lobby/${lobby?.inner.id}`);
+      console.log("lobby created at: /lobby/" + lobby?.inner.id);
     } else {
       setButtonLoading(false);
     }
@@ -77,9 +79,9 @@ export default function CreateLobbyPage() {
           <Button
             className="newRound"
             variant="contained"
-            onClick={submitCreateRound}
+            onClick={submitCreateLobby}
           >
-            New round
+            New lobby
           </Button>
         </div>
       </FormControl>
