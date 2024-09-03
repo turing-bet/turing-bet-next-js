@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import redis from "../lib/db";
 import { Round, RoundStatus } from "../model/round";
 import { Bet, BetStatus } from "../model/bet";
-import PostService from "./PostService";
+import SubmissionService from "./SubmissionService";
 class RoundService {
   async setupRound(
     // selectedAccount: string,
@@ -10,7 +10,6 @@ class RoundService {
     voterAddress: string,
   ): Promise<Round> {
     const roundId = uuidv4();
-    const post = await PostService.setupRandomPost();
     const bet: Bet = {
       address: voterAddress,
       amount: betAmount,
@@ -19,9 +18,6 @@ class RoundService {
     };
     const round: Round = {
       id: roundId,
-      // selectedAccountHandle: selectedAccount,
-      voterAddresses: [voterAddress],
-      totalBettingPool: betAmount,
       voterBets: { voterAddress: bet },
 
       roundStartTime: Date.now(),
@@ -30,6 +26,9 @@ class RoundService {
       status: RoundStatus.ACTIVE,
     };
     return round;
+  }
+  async storeRound(round: Round): Promise<void> {
+    await redis.set(`round:${round.id}`, JSON.stringify(round));
   }
 
   async getRemainingRoundTime(roundId: string): Promise<number> {

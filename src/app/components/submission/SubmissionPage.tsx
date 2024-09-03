@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
-export default function RoundPage(lobby: Lobby) {
+export default function SubmissionPage(lobby: Lobby) {
   const [userAnswer, setUserAnswer] = useState<string | null>(null);
 
   return (
