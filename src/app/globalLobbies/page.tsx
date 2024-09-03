@@ -50,25 +50,27 @@ export default function GlobalLobbyPage(globalState: GlobalState) {
     },
   ];
   return (
-    <Box sx={{ height: 400, width: "100%", color: purple }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
+    <div className="flex w-full h-[100vh] m-20">
+      <Box sx={{ height: 400, color: "#fff" }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
             },
-          },
-        }}
-        pageSizeOptions={[5]}
-        disableRowSelectionOnClick
-        sx={{
-          border: "1px solid",
-          borderColor: "divider",
-          color: "text.blue.800",
-        }}
-      />
-    </Box>
+          }}
+          pageSizeOptions={[5]}
+          disableRowSelectionOnClick
+          sx={{
+            border: "1px solid",
+            borderColor: "divider",
+            color: "text.blue.800",
+          }}
+        />
+      </Box>
+    </div>
   );
 }

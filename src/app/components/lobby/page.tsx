@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Typography from "@mui/material/Typography";
 import { Lobby } from "../../model/lobby";
 import { useState } from "react";
+
 export default function LobbyPage(lobby: Lobby) {
   const router = useRouter();
   return (
