@@ -1,4 +1,4 @@
-import { Submission } from './submission';
+import { Submission } from "./submission";
 export interface UserSubmission extends Submission {
   userAddress?: string;
 }

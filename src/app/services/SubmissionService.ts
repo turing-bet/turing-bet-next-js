@@ -8,8 +8,6 @@ class SubmissionService {
     return contextSubmissions;
   }
 
-   
-
   async shuffleSubmissions(submissions: Submission[]): Promise<Submission[]> {
     const shuffledSubmissions: Submission[] = [];
     return shuffledSubmissions;

@@ -35,15 +35,11 @@ export default function CreateLobbyPage() {
     // const betInput  = (target.elements.namedItem("amountInput") as HTMLInputElement).value;
     const betInput = parseInt("0.01");
     console.log("Bet amount: ", betInput);
-    const round = await RoundService.setupRound(betInput, "mishka.eth");
-    const lobby = await LobbyService.setupLobby(round, 0.01, [
-      "mishka.eth",
-      "hemlock.eth",
-    ]);
+    const lobby = await LobbyService.setupLobby(0.01, "mishka.eth");
     console.log("lobby created: ", lobby);
     if (lobby) {
-      router.push(`/lobby/${lobby?.inner.id}`);
-      console.log("lobby created at: /lobby/" + lobby?.inner.id);
+      router.push(`/lobby/${lobby?.id}`);
+      console.log("lobby created at: /lobby/" + lobby?.id);
     } else {
       setButtonLoading(false);
     }

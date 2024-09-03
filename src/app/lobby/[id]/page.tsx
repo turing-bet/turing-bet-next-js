@@ -4,17 +4,21 @@ import { useRouter } from "next/navigation";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import LobbyService from "../../services/LobbyService";
-export default async function LobbyPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+import { Lobby } from "../../model/lobby";
+export default function LobbyPage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const lobby = await LobbyService.fetchLobby(params.id);
+  const [lobby, setLobby] = useState<Lobby | null>(null);
+  async function fetchLobby() {
+    const lobby = await LobbyService.getLobby(params.id);
+    if (lobby) {
+      console.log("lobby fetched: ", lobby);
+      setLobby(lobby);
+    }
+  }
   return (
     <div className="flex flex-col h-screen ">
       <Typography component="h2" variant="h5">
-        Lobby ID: {lobby?.inner.id}
+        Lobby ID: {lobby?.id}
       </Typography>
       <div>
         <Typography component="h2" variant="h5">

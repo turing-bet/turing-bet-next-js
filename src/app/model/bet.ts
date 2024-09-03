@@ -8,6 +8,6 @@ export enum BetStatus {
 export interface Bet {
   address?: string;
   amount?: number;
-  roundId?: string;
+  lobbyId?: string;
   betStatus?: BetStatus;
 }
