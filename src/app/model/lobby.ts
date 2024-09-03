@@ -1,10 +1,18 @@
-import { Round } from "./round";
 import { Bet } from "./bet";
-export interface Lobby extends Round {
-  inner: Round;
+export enum LobbyStatus {
+  ACTIVE = "ACTIVE",
+  EXPIRED = "EXPIRED",
+  PENDING = "PENDING",
+}
+
+export interface Lobby  {
   voterAddresses?: string[];
   totalBettingPool?: number;
-  pendingBets: { [address: string]: Bet };
+  playerBets: { [address: string]: Bet };
+  id?: string;
+  roundStartTime?: number;
+  roundEndTime?: number;
+  lobbyStatus?: LobbyStatus;
 }
 
 export type LobbyAction =
@@ -14,20 +22,14 @@ export type LobbyAction =
     }
   | {
       type: "setBets";
-      payload: Lobby["pendingBets"];
+      payload: Lobby["playerBets"];
     }
-  | {
-      type: "setRound";
-      payload: Round;
-    };
 
 export function lobbyReducer(lobby: Lobby, action: LobbyAction): Lobby {
   switch (action.type) {
     case "updateLobby":
       return { ...lobby, ...action.payload };
     case "setBets":
-      return { ...lobby, ...action.payload };
-    case "setRound":
       return { ...lobby, ...action.payload };
     default:
       throw new Error("Invalid action type");

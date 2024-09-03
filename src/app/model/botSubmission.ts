@@ -1,5 +1,3 @@
-export interface BotSubmission {
-  lobbyId?: string;
-  submissionId?: string;
-  text?: string;
+import { Submission } from './submission';
+export interface BotSubmission extends Submission {
 }

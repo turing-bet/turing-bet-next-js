@@ -1,4 +1,4 @@
-import { Submission } from "../model/submission";
+import { Submission } from "../model/userSubmission";
 import { gatherAnswers, generateAnswer } from "../lib/generator";
 class SubmissionService {
   async getContextSubmissions(): Promise<Submission[]> {
@@ -7,6 +7,8 @@ class SubmissionService {
 
     return contextSubmissions;
   }
+
+   
 
   async shuffleSubmissions(submissions: Submission[]): Promise<Submission[]> {
     const shuffledSubmissions: Submission[] = [];

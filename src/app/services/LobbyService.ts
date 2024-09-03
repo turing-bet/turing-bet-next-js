@@ -1,28 +1,36 @@
 import { v4 as uuidv4 } from "uuid";
-import { Lobby } from "../model/lobby";
+import { Lobby, LobbyStatus } from "../model/lobby";
 import redis from "../lib/db";
 import { Bet, BetStatus } from "../model/bet";
 import { Round, RoundStatus } from "../model/round";
 class LobbyService {
   async setupLobby(
-    round: Round,
-    betPool: number,
-    addresses: string[],
+    minimumBet: number,
+    initialAddress: string,
   ): Promise<Lobby> {
     const lobbyId = uuidv4();
+    const initBet: Bet =  {
+      address: initialAddress,
+      amount: minimumBet,
+      roundId: lobbyId,
+      betStatus: BetStatus.PENDING,
+    };
     const lobby: Lobby = {
-      inner: round,
-      voterAddresses: addresses,
-      totalBettingPool: betPool,
-      pendingBets: {},
+      id: lobbyId,
+      voterAddresses: [initialAddress],
+      totalBettingPool: minimumBet,
+      playerBets: { [initialAddress]: initBet },
+      roundStartTime: Date.now(),
+      roundEndTime: Date.now() + 1000 * 60 * 60 * 24,
+      lobbyStatus: LobbyStatus.ACTIVE,
     };
     return lobby;
   }
   async storeLobby(lobby: Lobby): Promise<void> {
-    await redis.set(`round:${lobby.inner.id}`, JSON.stringify(lobby));
+    await redis.set(`lobby:${lobby.id}`, JSON.stringify(lobby));
   }
 
-  async fetchLobby(id: string): Promise<Lobby> {
+  async fetchLobby(id: string)  {
     const res: Lobby | null = await redis.hgetall(`lobby:${id}`);
     return res;
   }
