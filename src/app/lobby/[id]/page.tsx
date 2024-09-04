@@ -18,13 +18,6 @@ export default function LobbyPage({ params }: { params: { id: string } }) {
       setLobby(lobby);
     }
   }
-  async function fetchTotalBettingPool() {
-    const totalBettingPool = await LobbyService.getTotalBetPool(params.id);
-    if (totalBettingPool) {
-      console.log("bet pool fetched: ", totalBettingPool);
-      setTotalBettingPool(totalBettingPool);
-    }
-  }
   return (
     <div className="flex flex-col h-screen ">
       <Typography component="h2" variant="h5">
