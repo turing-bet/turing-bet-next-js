@@ -3,8 +3,12 @@ import TextField from "@mui/material/TextField";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import redis from "../../lib/db";
-import { Round } from "../../model/round";
 import { Lobby } from "../../model/lobby";
+import { Submission } from "../../model/submission";
+import { BotSubmission } from "../../model/botSubmission";
+import { UserSubmission } from "../../model/userSubmission";
+import SubmissionService from "../../services/SubmissionService";
+import BotSubmissionService from "../../services/BotSubmissionService";
 import FormLabel from "@mui/material/FormLabel";
 import { Button, Checkbox, Container } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
@@ -16,17 +20,19 @@ import Stack from "@mui/material/Stack";
 
 export default function SubmissionPage(lobby: Lobby) {
   const [userAnswer, setUserAnswer] = useState<string | null>(null);
-
+  const [loading, setLoading] = useState(false);
+  const [currentBetPool, setCurrentBetPool] = useState<number>(0);
+  const [playerAddresses, setPlayerAddresses] = useState<string[]>([]);
   return (
     <div className="flex flex-col  h-screen">
       <Typography component="h2" variant="h5">
-        Round ID: {lobby.id} 01234567-abcd
+        Round ID: {lobby?.id}
       </Typography>
       <Typography component="h2" variant="h5">
-        Players: {lobby.voterAddresses} mishka.eth, hemlock.eth
+        Players: {playerAddresses}
       </Typography>
       <Typography component="h2" variant="h5">
-        Betting pool: {lobby.totalBettingPool} 0.01 ETH
+        Betting pool: {currentBetPool} ETH
       </Typography>
 
       <Container>
@@ -59,17 +65,18 @@ export default function SubmissionPage(lobby: Lobby) {
 
 export function VotingRoundPage(lobby: Lobby) {
   const [userVote, setUserVote] = useState<string | null>(null);
-
+  const [currentBetPool, setCurrentBetPool] = useState<number>(0);
+  const [playerAddresses, setPlayerAddresses] = useState<string[]>([]);
   return (
     <div className="flex flex-col  h-screen">
       <Typography component="h2" variant="h5">
-        Round ID: {lobby.id} 01234567-abcd
+        Round ID: {lobby?.id}
       </Typography>
       <Typography component="h2" variant="h5">
-        Players: {lobby.voterAddresses} mishka.eth, hemlock.eth
+        Players: {lobby?.voterAddresses}
       </Typography>
       <Typography component="h2" variant="h5">
-        Betting pool: {lobby.totalBettingPool} 0.01 ETH
+        Betting pool: {currentBetPool} ETH
       </Typography>
 
       <Container>

@@ -24,7 +24,7 @@ export default function LobbyPage({ params }: { params: { id: string } }) {
       console.log("bet pool fetched: ", totalBettingPool);
       setTotalBettingPool(totalBettingPool);
     }
-  }   
+  }
   return (
     <div className="flex flex-col h-screen ">
       <Typography component="h2" variant="h5">

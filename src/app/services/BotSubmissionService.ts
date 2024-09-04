@@ -31,3 +31,5 @@ class BotSubmissionService {
     submissions.splice(botSubmissionIndex, 0, botSubmission);
   }
 }
+
+export default new BotSubmissionService();
