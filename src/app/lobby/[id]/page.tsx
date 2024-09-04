@@ -8,6 +8,9 @@ import { Lobby } from "../../model/lobby";
 export default function LobbyPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [lobby, setLobby] = useState<Lobby | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [totalBettingPool, setTotalBettingPool] = useState(0);
+
   async function fetchLobby() {
     const lobby = await LobbyService.getLobby(params.id);
     if (lobby) {
@@ -15,6 +18,13 @@ export default function LobbyPage({ params }: { params: { id: string } }) {
       setLobby(lobby);
     }
   }
+  async function fetchTotalBettingPool() {
+    const totalBettingPool = await LobbyService.getTotalBetPool(params.id);
+    if (totalBettingPool) {
+      console.log("bet pool fetched: ", totalBettingPool);
+      setTotalBettingPool(totalBettingPool);
+    }
+  }   
   return (
     <div className="flex flex-col h-screen ">
       <Typography component="h2" variant="h5">
@@ -27,7 +37,7 @@ export default function LobbyPage({ params }: { params: { id: string } }) {
       </div>
       <div>
         <Typography component="h2" variant="h5">
-          Current bet pool: {lobby?.totalBettingPool}
+          Current bet pool: {totalBettingPool}
         </Typography>
         <div>
           <Button variant="contained" color="primary">
