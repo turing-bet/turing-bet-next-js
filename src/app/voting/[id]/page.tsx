@@ -54,6 +54,12 @@ export default function VotingPage({ params }: { params: { id: string } }) {
       setBetPool(betPool);
     }
   };
+  useEffect(() => {
+    getLobby();
+    getSubmissions();
+    getRemainingTime();
+    getBetPool();
+  });
 
   return (
     <div className="flex flex-col h-screen ">

@@ -13,12 +13,10 @@ class RoundService {
     const bet: Bet = {
       address: voterAddress,
       amount: betAmount,
-      roundId: roundId,
       betStatus: BetStatus.PENDING,
     };
     const round: Round = {
       id: roundId,
-      voterBets: { voterAddress: bet },
 
       roundStartTime: Date.now(),
       //TODO: make sure this is X time from now

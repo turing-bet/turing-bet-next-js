@@ -19,7 +19,6 @@ import RoundService from "../services/RoundService";
 export default function CreateLobbyPage() {
   const [betAmount, setBetAmount] = useState<number | null>(null);
   const [buttonLoading, setButtonLoading] = useState<boolean>(false);
-  const newRoundButton = document.querySelector(".newRound");
   const router = useRouter();
 
   async function amountSelect(e: FormEvent<HTMLFormElement>) {

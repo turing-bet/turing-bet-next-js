@@ -2,7 +2,7 @@
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LobbyService from "../../services/LobbyService";
 import { Lobby } from "../../model/lobby";
 export default function LobbyPage({ params }: { params: { id: string } }) {
@@ -18,6 +18,7 @@ export default function LobbyPage({ params }: { params: { id: string } }) {
       setLobby(lobby);
     }
   }
+
   return (
     <div className="flex flex-col h-screen ">
       <Typography component="h2" variant="h5">

@@ -35,7 +35,7 @@ export default function ScratchLobbyGameDemoPage(initLobby: Lobby) {
   // }, []);
   function onStartGameClickHandler() {
     startTransition(() => {
-      router.push(`./submission/${initLobby?.inner.id}`);
+      router.push(`./submission/${initLobby?.id}`);
     });
   }
 
@@ -43,7 +43,7 @@ export default function ScratchLobbyGameDemoPage(initLobby: Lobby) {
     <div className="flex flex-col h-screen ">
       <Typography component="h2" variant="h5">
         Lobby ID:
-        <> {initLobby?.inner.id}</>
+        <> {initLobby?.id}</>
       </Typography>
       <div>
         <Typography component="h2" variant="h5">
@@ -51,9 +51,7 @@ export default function ScratchLobbyGameDemoPage(initLobby: Lobby) {
         </Typography>
       </div>
       <div>
-        <Typography component="h2" variant="h5">
-          Current bet pool: {initLobby?.totalBettingPool}
-        </Typography>
+        <Typography component="h2" variant="h5"></Typography>
 
         <Button
           variant="contained"

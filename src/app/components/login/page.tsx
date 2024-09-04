@@ -156,42 +156,10 @@ export default function LoginPage() {
   return (
     <Web3AuthProvider config={web3AuthContextConfig}>
       <WalletServicesProvider context={Web3AuthInnerContext}>
-        <SignInContainer direction="column" justifyContent="space-between">
-          <Card variant="outlined">
-            <Typography
-              component="h1"
-              variant="h4"
-              sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
-            >
-              Sign in
-            </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                gap: 2,
-              }}
-            >
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  uiConsole(getUserInfo);
-                }}
-                disabled={loggedIn}
-              >
-                Web3 sign in
-              </Button>
-            </Box>
-            <Button variant="outlined">Create lobby</Button>
-            <Button variant="outlined" onClick={onBrowseLobbiesClickHandler}>
-              Browse lobbies
-            </Button>
-            <Button variant="outlined" href="/testPage/page">
-              test
-            </Button>
-          </Card>
-        </SignInContainer>
+        <SignInContainer
+          direction="column"
+          justifyContent="space-between"
+        ></SignInContainer>
       </WalletServicesProvider>
     </Web3AuthProvider>
   );
