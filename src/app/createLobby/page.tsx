@@ -11,10 +11,11 @@ import type { FormEvent } from "react";
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import FormControl from "@mui/material/FormControl";
-import redis from "../../lib/db";
-import { Round } from "../../model/round";
-import LobbyService from "../../services/LobbyService";
-import RoundService from "../../services/RoundService";
+import redis from "../lib/db";
+import { Round } from "../model/round";
+import LobbyService from "../services/LobbyService";
+import RoundService from "../services/RoundService";
+
 export default function CreateLobbyPage() {
   const [betAmount, setBetAmount] = useState<number | null>(null);
   const [buttonLoading, setButtonLoading] = useState<boolean>(false);
@@ -46,7 +47,7 @@ export default function CreateLobbyPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen input-group">
+    <div className="flex flex-col items-center justify-center h-screen m-4 sm:m-20 input-group">
       <Typography component="h2" variant="h3">
         Create a new lobby
       </Typography>

@@ -1,7 +1,6 @@
-import Image from "next/image";
-import LoginPage from "./components/login/LoginPage";
-import CreateLobbyPage from "./components/createLobby/CreateLobbyPage";
-import { Round } from "./model/round";
+import LoginPage from "./components/login/page";
+import CreateLobbyPage from "./createLobby/page";
+
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
