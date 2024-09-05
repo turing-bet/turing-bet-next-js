@@ -8,30 +8,30 @@ import { grey, purple, blue } from "@mui/material/colors";
 
 export default function GlobalLobbyPage() {
   //  globalState: GlobalState
-  //TODO: globalState associated fields:
-  //Does it hold lobbies or rounds?
   const [lobbiesList, setLobbiesList] = useState<GlobalState["lobbies"] | null>(
     null,
   );
+  const [lobbyLinks, setLobbyLinks] = useState<string[]>([]);
+
   const columns: GridColDef<(typeof rows)[number]>[] = [
     { field: "id", headerName: "ID", width: 90 },
     {
       field: "Addresses",
       headerName: "Addresses",
-      width: 150,
+      width: 300,
       editable: true,
     },
     {
       field: "minimumBet",
       headerName: "Minimum Bet in ETH",
       type: "number",
-      width: 150,
+      width: 300,
       editable: true,
     },
     {
       field: "lobbyLink",
       headerName: "Link to Lobby",
-      width: 150,
+      width: 300,
       editable: true,
     },
   ];
