@@ -6,6 +6,7 @@ import ButtonPrimary from "./ButtonPrimary";
 import { Web3Auth } from "@web3auth/modal";
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import { useQuirkyName } from "@/app/hooks/useQuirkyName";
 
 const pages = [
   { name: "Create Lobby", href: "/createLobby/" },
@@ -43,6 +44,12 @@ const Header = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState<any>(null);
 
+  const quirkyName = useQuirkyName(userInfo?.idToken || "");
+
+  console.log("LoggedIn", loggedIn);
+  console.log("Provider", provider);
+  console.log("UserInfo", userInfo);
+
   useEffect(() => {
     const init = async () => {
       try {
@@ -51,6 +58,8 @@ const Header = () => {
 
         if (web3auth.connected) {
           setLoggedIn(true);
+        } else {
+          setLoggedIn(false);
         }
       } catch (error) {
         console.error(error);
@@ -79,10 +88,18 @@ const Header = () => {
   };
 
   const logout = async () => {
-    await web3auth.logout();
-    setProvider(null);
-    setLoggedIn(false);
-    console.log("logged out");
+    if (provider) {
+      try {
+        await web3auth.logout();
+        setProvider(null);
+        setLoggedIn(false);
+        console.log("logged out");
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
+    } else {
+      console.log("Wallet is not connected");
+    }
   };
 
   return (
@@ -100,9 +117,11 @@ const Header = () => {
         </div>
       </div>
       <div className="flex items-center cursor-default">
-        {/* {loggedIn && userInfo.email && (
-          <span className="px-4">Logged in as: {userInfo.email}</span>
-        )} */}
+        {loggedIn && userInfo && (
+          <span className="px-4">
+            Logged in as: <span className="font-bold">{quirkyName}</span>
+          </span>
+        )}
         <ButtonPrimary
           label={loggedIn ? "Logout" : "Login"}
           onClick={loggedIn ? logout : login}
