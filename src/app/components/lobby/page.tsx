@@ -6,7 +6,7 @@ import { Lobby } from "../../model/lobby";
 import { useState } from "react";
 
 export default function LobbyPage() {
-//  initialLobby: Lobby
+  //  initialLobby: Lobby
   const router = useRouter();
   return (
     <div className="flex flex-col h-screen ">

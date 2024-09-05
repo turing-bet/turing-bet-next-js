@@ -17,12 +17,21 @@ import { purple, grey } from "@mui/material/colors";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-
+import ButtonPrimary from "../ui/ButtonPrimary";
+import { getQuestion } from "../../lib/jokes";
 export default function SubmissionPage(lobby: Lobby) {
   const [userAnswer, setUserAnswer] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [currentBetPool, setCurrentBetPool] = useState<number>(0);
   const [playerAddresses, setPlayerAddresses] = useState<string[]>([]);
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [question, setQuestion] = useState<string>("");
+  // const getQuestion = async () => {
+  //   const question: string = await getQuestion();
+  //   setQuestion(question);
+  //   console.log(question);
+  // };
+  const submit = async () => {};
   return (
     <div className="flex flex-col  h-screen">
       <Typography component="h2" variant="h5">
@@ -38,7 +47,7 @@ export default function SubmissionPage(lobby: Lobby) {
       <Container>
         <div>
           <Typography component="h2" variant="h4">
-            Question: Why did the scarecrow get a promotion?
+            Question: {question}
           </Typography>
         </div>
       </Container>
@@ -59,6 +68,9 @@ export default function SubmissionPage(lobby: Lobby) {
           />
         </FormControl>
       </Container>
+      <Button onClick={submit} variant="outlined">
+        Submit
+      </Button>
     </div>
   );
 }

@@ -4,6 +4,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import ButtonPrimary from "./ButtonPrimary";
 import { Web3Auth } from "@web3auth/modal";
+import { useWeb3Auth } from "@web3auth/modal-react-hooks";
+import {
+  Web3AuthInnerContext,
+  Web3AuthProvider,
+} from "@web3auth/modal-react-hooks";
+import { web3AuthContextConfig } from "../../lib/web3auth";
+import { WalletServicesProvider } from "@web3auth/wallet-services-plugin-react-hooks";
+
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 
@@ -42,7 +50,6 @@ const Header = () => {
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState<any>(null);
-
   useEffect(() => {
     const init = async () => {
       try {
@@ -86,30 +93,34 @@ const Header = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 flex w-full justify-between items-center p-4 z-50">
-      <div className="flex items-baseline">
-        <Link href="/">
-          <span className="pl-2 text-xl font-bold">Turing.bet</span>
-        </Link>
-        <div className="flex gap-2 px-4">
-          {pages.map((page) => (
-            <Link key={page.href} href={page.href}>
-              <span className="text-sm cursor-pointer">{page.name}</span>
+    <Web3AuthProvider config={web3AuthContextConfig}>
+      <WalletServicesProvider context={Web3AuthInnerContext}>
+        <div className="fixed top-0 left-0 flex w-full justify-between items-center p-4 z-50">
+          <div className="flex items-baseline">
+            <Link href="/">
+              <span className="pl-2 text-xl font-bold">Turing.bet</span>
             </Link>
-          ))}
-        </div>
-      </div>
-      <div className="flex items-center cursor-default">
-        {/* {loggedIn && userInfo.email && (
+            <div className="flex gap-2 px-4">
+              {pages.map((page) => (
+                <Link key={page.href} href={page.href}>
+                  <span className="text-sm cursor-pointer">{page.name}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center cursor-default">
+            {/* {loggedIn && userInfo.email && (
           <span className="px-4">Logged in as: {userInfo.email}</span>
         )} */}
-        <ButtonPrimary
-          label={loggedIn ? "Logout" : "Login"}
-          onClick={loggedIn ? logout : login}
-          disabled={!web3auth}
-        />
-      </div>
-    </div>
+            <ButtonPrimary
+              label={loggedIn ? "Logout" : "Login"}
+              onClick={loggedIn ? logout : login}
+              disabled={!web3auth}
+            />
+          </div>
+        </div>
+      </WalletServicesProvider>
+    </Web3AuthProvider>
   );
 };
 
