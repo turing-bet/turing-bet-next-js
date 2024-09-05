@@ -1,5 +1,5 @@
 export interface Submission {
   lobbyId?: string;
-  submissionId?: string;
+  submissionNumber?: number;
   text?: string;
 }

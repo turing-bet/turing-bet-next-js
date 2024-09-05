@@ -9,6 +9,7 @@ import { BotSubmission } from "../../model/botSubmission";
 import { UserSubmission } from "../../model/userSubmission";
 import SubmissionService from "../../services/SubmissionService";
 import BotSubmissionService from "../../services/BotSubmissionService";
+import LobbyService from "@/app/services/LobbyService";
 import FormLabel from "@mui/material/FormLabel";
 import { Button, Checkbox, Container } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
@@ -19,19 +20,41 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import ButtonPrimary from "../ui/ButtonPrimary";
 import { getQuestion } from "../../lib/jokes";
+import SubmissionInput from "../ui/SubmissionInput";
 export default function SubmissionPage(lobby: Lobby) {
   const [userAnswer, setUserAnswer] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [currentBetPool, setCurrentBetPool] = useState<number>(0);
   const [playerAddresses, setPlayerAddresses] = useState<string[]>([]);
+  const [currentAddress, setCurrentAddress] = useState<string>("");
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
+  const [submissionNumber, setSubmissionNumber] = useState<number>(0);
   // const getQuestion = async () => {
   //   const question: string = await getQuestion();
   //   setQuestion(question);
   //   console.log(question);
   // };
-  const submit = async () => {};
+  const submit = async () => {
+    setLoading(true);
+    if (!userAnswer) {
+      return;
+    }
+    if (!lobby.id) {
+      return;
+    }
+
+    await SubmissionService.createUserSubmission(
+      lobby?.id,
+      userAnswer,
+      currentAddress,
+    );
+    setLoading(false);
+    setSubmitted(true);
+  };
+  const submitAnswer = (e: React.FormEvent, answer: string) => {
+    e.preventDefault();
+  };
   return (
     <div className="flex flex-col  h-screen">
       <Typography component="h2" variant="h5">
@@ -53,20 +76,7 @@ export default function SubmissionPage(lobby: Lobby) {
       </Container>
       <div></div>
       <Container>
-        <FormControl>
-          <FormLabel htmlFor="answerInput">Your answer</FormLabel>
-          <TextField
-            id="answerInput"
-            label="Answer"
-            variant="outlined"
-            autoFocus
-            required
-            multiline
-            maxRows={4}
-            color="primary"
-            onChange={(e) => setUserAnswer(e.target.value)}
-          />
-        </FormControl>
+        <SubmissionInput submitAnswer={submitAnswer}></SubmissionInput>
       </Container>
       <Button onClick={submit} variant="outlined">
         Submit
@@ -79,6 +89,16 @@ export function VotingRoundPage(lobby: Lobby) {
   const [userVote, setUserVote] = useState<string | null>(null);
   const [currentBetPool, setCurrentBetPool] = useState<number>(0);
   const [playerAddresses, setPlayerAddresses] = useState<string[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [BotSubmission, setBotSubmission] = useState<BotSubmission | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(false);
+  const shuffle = (submissions: Submission[]) => {
+    SubmissionService.shuffleSubmissionsNumbers(submissions);
+    setSubmissions(submissions);
+  };
+
   return (
     <div className="flex flex-col  h-screen">
       <Typography component="h2" variant="h5">

@@ -3,13 +3,17 @@ import { Submission } from "../model/submission";
 import { gatherAnswers } from "../lib/generator";
 import { v4 as uuidv4 } from "uuid";
 class SubmissionService {
-  async createSubmission(text: string, lobbyId: string): Promise<Submission> {
+  async createSubmission(
+    text: string,
+    lobbyId: string,
+    submissionNumber: number,
+  ): Promise<Submission> {
     const submissionId = uuidv4();
 
     const submission: Submission = {
-      submissionId,
-      text,
       lobbyId,
+      text,
+      submissionNumber,
     };
     return submission;
   }
@@ -19,10 +23,7 @@ class SubmissionService {
     lobbyId: string,
     playerAddress: string,
   ): Promise<UserSubmission> {
-    const submissionId = uuidv4();
-
     const submission: UserSubmission = {
-      submissionId,
       text,
       lobbyId,
       playerAddress,
@@ -30,7 +31,9 @@ class SubmissionService {
     return submission;
   }
 
-  async getContextSubmissions(): Promise<Submission[]> {
+  async getContextSubmissions(
+    userSubmissions: UserSubmission[],
+  ): Promise<Submission[]> {
     const contextSubmissions: Submission[] = [];
     const userAnswers: string[] = [];
 
@@ -40,6 +43,12 @@ class SubmissionService {
   async getSubmissions(): Promise<Submission[]> {
     const canidateSubmissions: Submission[] = [];
     return canidateSubmissions;
+  }
+
+  async shuffleSubmissionsNumbers(submissions: Submission[]): Promise<void> {
+    for (const submission of submissions) {
+      submission.submissionNumber = Math.random() * submissions.length;
+    }
   }
 }
 

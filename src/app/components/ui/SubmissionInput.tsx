@@ -32,3 +32,5 @@ const SubmissionInput = ({ submitAnswer }: Props) => {
     </form>
   );
 };
+
+export default SubmissionInput;
