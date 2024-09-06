@@ -11,7 +11,7 @@ import {
 } from "@web3auth/modal-react-hooks";
 import { web3AuthContextConfig } from "../../lib/web3auth";
 import { WalletServicesProvider } from "@web3auth/wallet-services-plugin-react-hooks";
-
+import RPC from "../../lib/ethersRPC";
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 
@@ -49,7 +49,6 @@ const web3auth = new Web3Auth({
 const Header = () => {
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState<any>(null);
   useEffect(() => {
     const init = async () => {
       try {
@@ -81,7 +80,6 @@ const Header = () => {
 
   const getUserInfo = async () => {
     const user = await web3auth.getUserInfo();
-    setUserInfo(user);
     console.log(user);
   };
 
@@ -90,6 +88,15 @@ const Header = () => {
     setProvider(null);
     setLoggedIn(false);
     console.log("logged out");
+  };
+
+  const getAccounts = async () => {
+    if (!provider) {
+      console.log("provider not initialized yet");
+      return;
+    }
+    const address = await RPC.getAccounts(provider);
+    console.log(address);
   };
 
   return (

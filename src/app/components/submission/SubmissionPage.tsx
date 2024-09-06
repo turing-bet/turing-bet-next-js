@@ -1,7 +1,5 @@
 "use client";
-import TextField from "@mui/material/TextField";
-import type { FormEvent } from "react";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import redis from "../../lib/db";
 import { Lobby } from "../../model/lobby";
 import { Submission } from "../../model/submission";
@@ -19,9 +17,10 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import ButtonPrimary from "../ui/ButtonPrimary";
-import { getQuestion } from "../../lib/jokes";
+import { getQuestion } from "@/app/lib/jokes";
 import SubmissionInput from "../ui/SubmissionInput";
 import VoteInput from "../ui/VoteInput";
+
 export default function SubmissionPage(lobby: Lobby) {
   const [userAnswer, setUserAnswer] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -31,11 +30,25 @@ export default function SubmissionPage(lobby: Lobby) {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
   const [submissionNumber, setSubmissionNumber] = useState<number>(0);
-  // const getQuestion = async () => {
-  //   const question: string = await getQuestion();
-  //   setQuestion(question);
-  //   console.log(question);
-  // };
+  const getSetup = async () => {
+    const question: string = await getQuestion();
+    setQuestion(question);
+    console.log(question);
+  };
+  const getTotalBetPool = async () => {
+    if (!lobby?.id) {
+      return;
+    }
+    const betPool = await LobbyService.getTotalBetPool(lobby?.id);
+    setCurrentBetPool(betPool);
+  };
+
+  const init = async () => {
+    await getSetup();
+  };
+  useEffect(() => {
+    init();
+  }, []);
   const submit = async () => {
     setLoading(true);
     if (!userAnswer) {
@@ -56,6 +69,7 @@ export default function SubmissionPage(lobby: Lobby) {
   const submitAnswer = (e: React.FormEvent, answer: string) => {
     e.preventDefault();
   };
+
   return (
     <div className="flex flex-col  h-screen">
       <Typography component="h2" variant="h5">
