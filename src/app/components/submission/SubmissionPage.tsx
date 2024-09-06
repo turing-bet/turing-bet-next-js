@@ -21,6 +21,7 @@ import Stack from "@mui/material/Stack";
 import ButtonPrimary from "../ui/ButtonPrimary";
 import { getQuestion } from "../../lib/jokes";
 import SubmissionInput from "../ui/SubmissionInput";
+import VoteInput from "../ui/VoteInput";
 export default function SubmissionPage(lobby: Lobby) {
   const [userAnswer, setUserAnswer] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -167,30 +168,13 @@ export function VotingRoundPage(lobby: Lobby) {
         Who is the bot?
       </Typography>
       <Container>
-        <FormControl>
-          <FormControlLabel
-            control={<Checkbox sx={{ color: purple[800] }} />}
-            label="A"
-          />
-        </FormControl>
-        <FormControl>
-          <FormControlLabel
-            control={<Checkbox sx={{ color: purple[800] }} />}
-            label="B"
-          />
-        </FormControl>
-        <FormControl>
-          <FormControlLabel
-            control={<Checkbox sx={{ color: purple[800] }} />}
-            label="C"
-          />
-        </FormControl>
-        <FormControl>
-          <FormControlLabel
-            control={<Checkbox sx={{ color: purple[800] }} />}
-            label="D"
-          />
-        </FormControl>
+        <VoteInput
+          voteChoices={["A", "B", "C", "D"]}
+          selectEnabled={true}
+          selectionHandler={(index) => {
+            console.log("Selected index: " + index);
+          }}
+        ></VoteInput>
       </Container>
     </div>
   );
