@@ -14,6 +14,7 @@ import { WalletServicesProvider } from "@web3auth/wallet-services-plugin-react-h
 import RPC from "../../lib/ethersRPC";
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import { useQuirkyName } from "@/app/hooks/useQuirkyName";
 
 const pages = [
   { name: "Create Lobby", href: "/createLobby/" },
@@ -49,6 +50,14 @@ const web3auth = new Web3Auth({
 const Header = () => {
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState<any>(null);
+
+  const quirkyName = useQuirkyName(userInfo?.idToken || "");
+
+  console.log("LoggedIn", loggedIn);
+  console.log("Provider", provider);
+  console.log("UserInfo", userInfo);
+
   useEffect(() => {
     const init = async () => {
       try {
@@ -57,6 +66,8 @@ const Header = () => {
 
         if (web3auth.connected) {
           setLoggedIn(true);
+        } else {
+          setLoggedIn(false);
         }
       } catch (error) {
         console.error(error);
@@ -84,10 +95,18 @@ const Header = () => {
   };
 
   const logout = async () => {
-    await web3auth.logout();
-    setProvider(null);
-    setLoggedIn(false);
-    console.log("logged out");
+    if (provider) {
+      try {
+        await web3auth.logout();
+        setProvider(null);
+        setLoggedIn(false);
+        console.log("logged out");
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
+    } else {
+      console.log("Wallet is not connected");
+    }
   };
 
   const getAccounts = async () => {
@@ -100,34 +119,30 @@ const Header = () => {
   };
 
   return (
-    <Web3AuthProvider config={web3AuthContextConfig}>
-      <WalletServicesProvider context={Web3AuthInnerContext}>
-        <div className="fixed top-0 left-0 flex w-full justify-between items-center p-4 z-50">
-          <div className="flex items-baseline">
-            <Link href="/">
-              <span className="pl-2 text-xl font-bold">Turing.bet</span>
+    <div className="fixed top-0 left-0 flex w-full justify-between items-center p-4 z-50">
+      <div className="flex items-baseline">
+        <Link href="/">
+          <span className="pl-2 text-xl font-bold">Turing.bet</span>
+        </Link>
+        <div className="flex gap-2 px-4">
+          {pages.map((page) => (
+            <Link key={page.href} href={page.href}>
+              <span className="text-sm cursor-pointer">{page.name}</span>
             </Link>
-            <div className="flex gap-2 px-4">
-              {pages.map((page) => (
-                <Link key={page.href} href={page.href}>
-                  <span className="text-sm cursor-pointer">{page.name}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center cursor-default">
-            {/* {loggedIn && userInfo.email && (
+          ))}
+        </div>
+      </div>
+      <div className="flex items-center cursor-default">
+        {/* {loggedIn && userInfo.email && (
           <span className="px-4">Logged in as: {userInfo.email}</span>
         )} */}
-            <ButtonPrimary
-              label={loggedIn ? "Logout" : "Login"}
-              onClick={loggedIn ? logout : login}
-              disabled={!web3auth}
-            />
-          </div>
-        </div>
-      </WalletServicesProvider>
-    </Web3AuthProvider>
+        <ButtonPrimary
+          label={loggedIn ? "Logout" : "Login"}
+          onClick={loggedIn ? logout : login}
+          disabled={!web3auth}
+        />
+      </div>
+    </div>
   );
 };
 

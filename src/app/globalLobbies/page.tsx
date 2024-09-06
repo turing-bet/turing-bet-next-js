@@ -7,7 +7,9 @@ import { useState } from "react";
 import { grey, purple, blue } from "@mui/material/colors";
 
 export default function GlobalLobbyPage() {
-  //  globalState: GlobalState
+//  globalState: GlobalState
+  //TODO: globalState associated fields:
+  //Does it hold lobbies or rounds?
   const [lobbiesList, setLobbiesList] = useState<GlobalState["lobbies"] | null>(
     null,
   );
