@@ -30,11 +30,13 @@ export default function SubmissionPage(lobby: Lobby) {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
   const [submissionNumber, setSubmissionNumber] = useState<number>(0);
+  const getAddresses = async () => {};
   const getSetup = async () => {
     const question: string = await getQuestion();
     setQuestion(question);
     console.log(question);
   };
+
   const getTotalBetPool = async () => {
     if (!lobby?.id) {
       return;
@@ -68,6 +70,8 @@ export default function SubmissionPage(lobby: Lobby) {
   };
   const submitAnswer = (e: React.FormEvent, answer: string) => {
     e.preventDefault();
+    setUserAnswer(answer);
+    console.log("User answer: ", answer);
   };
 
   return (
