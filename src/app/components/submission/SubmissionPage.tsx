@@ -20,11 +20,12 @@ import ButtonPrimary from "../ui/ButtonPrimary";
 import { getQuestion } from "@/app/lib/jokes";
 import SubmissionInput from "../ui/SubmissionInput";
 import VoteInput from "../ui/VoteInput";
-
+import Timer from "../ui/Timer";
 export default function SubmissionPage(lobby: Lobby) {
   const [userAnswer, setUserAnswer] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [currentBetPool, setCurrentBetPool] = useState<number>(0);
+  const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [playerAddresses, setPlayerAddresses] = useState<string[]>([]);
   const [currentAddress, setCurrentAddress] = useState<string>("");
   const [submitted, setSubmitted] = useState<boolean>(false);
@@ -51,6 +52,14 @@ export default function SubmissionPage(lobby: Lobby) {
   useEffect(() => {
     init();
   }, []);
+  const getTimeRemaining = async () => {
+    if (!lobby?.id) {
+      return;
+    }
+    const time = await LobbyService.getRemainingRoundTime(lobby?.id);
+    setTimeRemaining(time);
+  };
+
   const submit = async () => {
     setLoading(true);
     if (!userAnswer) {
@@ -76,16 +85,18 @@ export default function SubmissionPage(lobby: Lobby) {
 
   return (
     <div className="flex flex-col  h-screen">
-      <Typography component="h2" variant="h5">
-        Round ID: {lobby?.id}
-      </Typography>
-      <Typography component="h2" variant="h5">
-        Players: {playerAddresses}
-      </Typography>
-      <Typography component="h2" variant="h5">
-        Betting pool: {currentBetPool} ETH
-      </Typography>
-
+      <Container>
+        <Typography component="h2" variant="h5">
+          Round ID: {lobby?.id}
+        </Typography>
+        <Typography component="h2" variant="h5">
+          Players: {playerAddresses}
+        </Typography>
+        <Typography component="h2" variant="h5">
+          Betting pool: {currentBetPool} ETH
+        </Typography>
+        <Timer timeRemaining={getTimeRemaining} />
+      </Container>
       <Container>
         <div>
           <Typography component="h2" variant="h4">
