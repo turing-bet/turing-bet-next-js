@@ -15,6 +15,7 @@ export default function LobbyPage({ params }: { params: { id: string } }) {
 
   async function fetchLobby() {
     const lobby = await LobbyService.getLobby(params.id);
+    console.log("lobby fetched: ", lobby);
     if (lobby) {
       console.log("lobby fetched: ", lobby);
       setLobby(lobby);
@@ -38,6 +39,15 @@ export default function LobbyPage({ params }: { params: { id: string } }) {
     init();
   }, []);
 
+  const handleStartGame = async () => {
+    setLoading(true);
+    if (lobby) {
+      router.push(`/submission/${lobby?.id}`);
+      console.log("Starting game with lobby: ", lobby);
+    } else {
+      console.error("No lobby found");
+    }
+  };
   const handleNewPlayerJoin = async () => {};
   return (
     <div className="flex flex-col h-screen ">
@@ -56,7 +66,11 @@ export default function LobbyPage({ params }: { params: { id: string } }) {
               Current bet pool: {totalBettingPool} ETH
             </Typography>
             <div>
-              <Button variant="contained" color="primary">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleStartGame}
+              >
                 Start Game
               </Button>
             </div>

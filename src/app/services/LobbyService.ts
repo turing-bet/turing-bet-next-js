@@ -47,6 +47,10 @@ class LobbyService {
     const end: number = (await redis.get(`round:${roundId}:roundEndTime`)) || 0;
     return end - now;
   }
+  async getExpiryTime(roundId: string): Promise<number> {
+    const end: number = (await redis.get(`round:${roundId}:roundEndTime`)) || 0;
+    return end;
+  }
 
   async handleNewPlayer(lobbyId: string, newAddress: string): Promise<void> {
     await redis.lpush(`lobby:${lobbyId}:voterAddresses`, newAddress);

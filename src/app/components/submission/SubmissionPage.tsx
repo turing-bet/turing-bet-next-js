@@ -26,6 +26,8 @@ export default function SubmissionPage(lobby: Lobby) {
   const [loading, setLoading] = useState(false);
   const [currentBetPool, setCurrentBetPool] = useState<number>(0);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
+  const [expiryTime, setExpiryTime] = useState<number>(0);
+
   const [playerAddresses, setPlayerAddresses] = useState<string[]>([]);
   const [currentAddress, setCurrentAddress] = useState<string>("");
   const [submitted, setSubmitted] = useState<boolean>(false);
@@ -48,17 +50,11 @@ export default function SubmissionPage(lobby: Lobby) {
 
   const init = async () => {
     await getSetup();
+    await getTotalBetPool();
   };
   useEffect(() => {
     init();
   }, []);
-  const getTimeRemaining = async () => {
-    if (!lobby?.id) {
-      return;
-    }
-    const time = await LobbyService.getRemainingRoundTime(lobby?.id);
-    setTimeRemaining(time);
-  };
 
   const submit = async () => {
     setLoading(true);
@@ -95,7 +91,7 @@ export default function SubmissionPage(lobby: Lobby) {
         <Typography component="h2" variant="h5">
           Betting pool: {currentBetPool} ETH
         </Typography>
-        <Timer timeRemaining={getTimeRemaining} />
+        <Timer></Timer>
       </Container>
       <Container>
         <div>
