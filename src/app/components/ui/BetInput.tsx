@@ -16,15 +16,24 @@ const BetInput = ({ submitBet }: Props) => {
   };
 
   return (
-    <form onSubmit={handleBet} className="flex flex-col items-center">
+    <form
+      onSubmit={handleBet}
+      className="flex items-center justify-between border-2 border-black bg-white pr-4 rounded-2xl"
+    >
       <input
         type="text"
         placeholder="Enter bet amount"
         value={bet}
         onChange={(e) => setBet(e.target.value)}
-        className="border-2 border-black p-2 rounded-lg"
+        className="w-full p-5 px-6 rounded-2xl text-black text-xl"
       />
-      <ButtonPrimary label="Submit" onClick={handleBet} disabled={submitted} />
+      <div className="text-white">
+        <ButtonPrimary
+          label="Submit"
+          onClick={handleBet}
+          disabled={submitted}
+        />
+      </div>
     </form>
   );
 };

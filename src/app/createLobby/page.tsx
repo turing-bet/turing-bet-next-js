@@ -11,13 +11,15 @@ import type { FormEvent } from "react";
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import FormControl from "@mui/material/FormControl";
-import redis from "../lib/db";
 import { Round } from "../model/round";
 import LobbyService from "../services/LobbyService";
 import BetInput from "../components/ui/BetInput";
 import { parse } from "path";
 import { Container } from "@mui/material";
+import ButtonPrimary from "../components/ui/ButtonPrimary";
+
 export default function CreateLobbyPage() {
+  const [privacy, setPrivacy] = useState<string>("");
   const [betAmount, setBetAmount] = useState<number | null>(null);
   const [buttonLoading, setButtonLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -51,28 +53,32 @@ export default function CreateLobbyPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen m-4 sm:m-20 input-group">
-      <Typography component="h2" variant="h3">
-        Create a new lobby
-      </Typography>
-      <Container>
+    <div className="flex flex-col items-center justify-center h-screen input-group">
+      <div className="bg-white rounded-3xl p-8 text-black flex flex-col gap-6">
+        <span className="text-3xl font-bold">Create a New Lobby</span>
         <BetInput submitBet={submitBet} />
-      </Container>
-      <div>
-        <Typography component="h2" variant="h3">
-          Privacy settings
-        </Typography>
-        <FormControlLabel required control={<Checkbox />} label="Unlisted" />
-        <FormControlLabel required control={<Checkbox />} label="Public" />
-      </div>
-      <div>
-        <Button
-          className="newRound"
-          variant="contained"
-          onClick={submitCreateLobby}
-        >
-          New lobby
-        </Button>
+        <div className="flex flex-col">
+          <span className="text-2xl font-bold">Privacy Setting</span>
+          <div className="grid grid-cols-2">
+            <FormControlLabel
+              onClick={() => setPrivacy("unlisted")}
+              control={<Checkbox checked={privacy === "unlisted"} />}
+              label="Unlisted"
+            />
+            <FormControlLabel
+              onClick={() => setPrivacy("public")}
+              control={<Checkbox checked={privacy === "public"} />}
+              label="Public"
+            />
+          </div>
+        </div>
+        <div className="text-white">
+          <ButtonPrimary
+            onClick={submitCreateLobby}
+            label={"New Lobby"}
+            disabled={false}
+          />
+        </div>
       </div>
     </div>
   );
